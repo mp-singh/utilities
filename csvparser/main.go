@@ -34,9 +34,17 @@ func main() {
 
 			jsonFile.WriteString("\t{\n")
 			for ii, l := range lines[i] {
-				jsonFile.WriteString("\t\t\"" + lines[0][ii] + "\": " + "\"" + l + "\",\n")
+				if (ii+1) == len(lines[i]) {
+					jsonFile.WriteString("\t\t\"" + lines[0][ii] + "\": " + "\"" + l + "\"\n")
+				} else {
+					jsonFile.WriteString("\t\t\"" + lines[0][ii] + "\": " + "\"" + l + "\",\n")
+				}
 			}
-			jsonFile.WriteString("\t},\n")
+			if (i+1) == len(lines) {
+				jsonFile.WriteString("\t}\n")
+			} else {
+				jsonFile.WriteString("\t}, \n")
+			}
 		}
 
 	}
