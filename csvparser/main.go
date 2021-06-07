@@ -10,12 +10,12 @@ import (
 
 func main() {
 
-	if len(os.Args) < 2 {
-		println("command requires a file as an argument")
-		os.Exit(2)
-	}
+    if len(os.Args) < 2 {
+	println("command requires a file as an argument")
+        os.Exit(2)
+    }
 
-	fileName := os.Args[1]
+    fileName := os.Args[1]
     file, err := os.Open(fileName)
     defer file.Close()
     if err != nil {
