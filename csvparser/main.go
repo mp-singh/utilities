@@ -28,7 +28,7 @@ func main() {
 			log.Fatal( err )
 		}
 
-	jsonFile.WriteString("{\n")
+	jsonFile.WriteString("[\n")
 	for i, _ := range lines {
 		if i != 0 {
 
@@ -40,7 +40,7 @@ func main() {
 		}
 
 	}
-	jsonFile.WriteString("}\n")
+	jsonFile.WriteString("]\n")
 	ioutil.WriteFile("out.json", jsonFile.Bytes(), 0644)
 	println("saved output to out.json")
 }
