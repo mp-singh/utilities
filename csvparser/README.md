@@ -1,9 +1,9 @@
 # Utilities
-##CSV Parser
+## CSV Parser
 
 Real simple parser that takes a csv file and grabs the headers as attribute names and creates a list of objects.
 
-##Usage 
+## Usage 
 1.  Clone this repo
 2.  From this directory
 
