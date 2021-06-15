@@ -11,7 +11,7 @@ import (
 func main() {
 
     if len(os.Args) < 2 {
-	println("command requires a file as an argument")
+	println("usage: csvparer filename.csv")
         os.Exit(2)
     }
 
