@@ -131,7 +131,7 @@ func getReminders(db *sql.DB) {
 		var duedate string
 		var reminderId int
 		row.Scan(&reminderId, &reminder, &duedate)
-		fmt.Printf( "\n\n[id-%d] Remember: %s (due: %s)\n\n",reminderId,reminder, duedate)
+		fmt.Printf( "\n\n[%d] Remember: %s (due: %s)\n\n",reminderId,reminder, duedate)
 	}
 }
 
