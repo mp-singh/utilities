@@ -6,9 +6,15 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"os"
+	"time"
 )
 var home = os.Getenv("HOME")
 var path = home + "/.clireminder"
+
+const (
+	layoutISO = "2006-01-02"
+	layoutUS  = "January 2, 2006"
+)
 
 func main() {
 	db := getDb()
@@ -82,11 +88,10 @@ func createDb() (*sql.DB, error) {
 }
 
 func createTable(db *sql.DB) {
-	fmt.Println("creating table")
 	createReminderTableSQL := `CREATE TABLE reminders (
 		"reminder_id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,		
 		"reminder" TEXT,
-		"duedate" TEXT
+		"duedate" DATE
 	  );`
 
 	statement, err := db.Prepare(createReminderTableSQL) // Prepare SQL Statement
@@ -128,10 +133,10 @@ func getReminders(db *sql.DB) {
 	defer row.Close()
 	for row.Next() { // Iterate and fetch the records from result cursor
 		var reminder string
-		var duedate string
+		var duedate time.Time
 		var reminderId int
 		row.Scan(&reminderId, &reminder, &duedate)
-		fmt.Printf( "\n\n[%d] Remember: %s (due: %s)\n\n",reminderId,reminder, duedate)
+		fmt.Printf( "\n\n[%d] Remember: %s (due: %s)\n\n",reminderId,reminder, duedate.Format(layoutUS))
 	}
 }
 
