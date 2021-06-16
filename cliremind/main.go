@@ -26,11 +26,12 @@ func main() {
 		arg = os.Args[1]
 	}
 
+
 	switch arg {
 	case "hello":
 		printHello()
 	case "add":
-		insertReminder(db, os.Args[2], os.Args[3])
+		insertReminder(db, os.Args)
 	case "del":
 		delReminder(db, os.Args[2])
 	case "get":
@@ -104,15 +105,19 @@ func createTable(db *sql.DB) {
 		}
 }
 
-func insertReminder(db *sql.DB, reminder string, dueDate string) {
+func insertReminder(db *sql.DB, args []string) {
+	if len(args) < 4 {
+		fmt.Println("usage:  cliremind add description date")
+		os.Exit(0)
+	}
+
 	log.Println("Inserting record ...")
 	insert := `INSERT INTO reminders(reminder, duedate) VALUES (?, ?)`
 	statement, err := db.Prepare(insert) // Prepare statement.
-	// This is good to avoid SQL injections
 	if err != nil {
 		log.Fatalln(err.Error())
 	}
-	res, err := statement.Exec(reminder, dueDate)
+	res, err := statement.Exec(args[2], args[3])
 	if err != nil {
 		fmt.Printf("there was an error adding the reminder: %s\n", err.Error())
 		log.Fatalln(err.Error())
@@ -136,8 +141,10 @@ func getReminders(db *sql.DB) {
 		var duedate time.Time
 		var reminderId int
 		row.Scan(&reminderId, &reminder, &duedate)
-		fmt.Printf( "\n\n[%d] Remember: %s (due: %s)\n\n",reminderId,reminder, duedate.Format(layoutUS))
+
+		fmt.Printf( "\n%d \t%s  %s",reminderId,reminder, formatDate(duedate))
 	}
+	fmt.Println("\n")
 }
 
 func delReminder(db *sql.DB, id string) {
@@ -151,4 +158,19 @@ func delReminder(db *sql.DB, id string) {
 	if err != nil {
 		fmt.Printf("unable to delete that id: %s", err.Error())
 	}
+}
+
+func formatDate(d time.Time) string {
+
+	ro, _ := time.Parse("0001-01-01 00:00:00", "0000-01-01 00:00:00")
+
+	if ro.Equal(d) {
+		return "(daily reminder)"
+	}
+	diff := d.Sub(time.Now())
+
+	if diff.Hours() < 0 {
+		return "(past due)"
+	}
+	return fmt.Sprintf("(due in %v hours)", int(diff.Hours()))
 }
